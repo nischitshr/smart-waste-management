@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import api from '../api/axios'
@@ -44,7 +42,6 @@ export default function Bins() {
   const [bins, setBins] = useState<Bin[]>([])
   const [userLocation, setUserLocation] = useState<[number, number]>([27.7172, 85.3240])
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   useEffect(() => {
   console.log('Bins useEffect fired')

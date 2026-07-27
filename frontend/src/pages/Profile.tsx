@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import { User as UserIcon, Mail, Phone, Shield, MapPinned } from 'lucide-react'
 import api from '../api/axios'
-import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-
 interface Profile {
   id: number
   username: string
@@ -12,16 +10,13 @@ interface Profile {
   phone: string
   ward: { id: number; number: number; name: string } | null
 }
-
 export default function Profile() {
   const { showToast } = useToast()
-  const { user } = useAuth()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-
   useEffect(() => {
     fetchProfile()
   }, [])
