@@ -6,7 +6,6 @@ django-filter==25.2
 djangorestframework==3.14.0
 djangorestframework-gis==1.2.1
 djangorestframework_simplejwt==5.5.1
-GDAL @ file:///C:/Users/abhin/Downloads/gdal-3.11.1-cp313-cp313-win_amd64.whl#sha256=a233e533689df3388ca990f11306dc9e68bf080c34b7460dc4b954500528187e
 pillow==12.2.0
 psycopg2-binary==2.9.12
 PyJWT==2.13.0
