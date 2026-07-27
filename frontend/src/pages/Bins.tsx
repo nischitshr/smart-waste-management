@@ -14,12 +14,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-const highPriorityIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-})
+// const highPriorityIcon = new L.Icon({
+//   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+//   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+//   iconSize: [25, 41],
+//   iconAnchor: [12, 41],
+// })
+// ^ high-priority (red) marker was driven by fill_level >= 80. Commented out
+// alongside fill_level since there's no hardware sensor data to compute it from yet.
+// Re-enable when fill_level tracking (manual or sensor-based) is implemented.
 
 
 
@@ -27,10 +30,10 @@ interface Bin {
   id: number
   properties: {
     address: string
-    fill_level: number
+    // fill_level: number       // commented out — no hardware sensors yet, future enhancement
     waste_type: string
     status: string
-    is_high_priority: boolean
+    // is_high_priority: boolean // depends on fill_level, commented out alongside it
   }
   geometry: {
     coordinates: [number, number]
@@ -72,15 +75,16 @@ const fetchBins = async (lat: number, lng: number) => {
   }
 }
 
-  const getFillColor = (level: number) => {
-    if (level >= 80) return 'text-red-600'
-    if (level >= 50) return 'text-yellow-600'
-    return 'text-green-600'
-  }
+  // const getFillColor = (level: number) => {
+  //   if (level >= 80) return 'text-red-600'
+  //   if (level >= 50) return 'text-yellow-600'
+  //   return 'text-green-600'
+  // }
+  // ^ commented out alongside fill_level. Re-enable when fill_level is back.
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
+
 
       <div className="max-w-4xl mx-auto px-6 py-6">
         {loading ? (
@@ -100,18 +104,20 @@ const fetchBins = async (lat: number, lng: number) => {
                   <Marker
                     key={bin.id}
                     position={[bin.geometry.coordinates[1], bin.geometry.coordinates[0]]}
-                    icon={bin.properties.is_high_priority ? highPriorityIcon : new L.Icon.Default()}
+                    icon={new L.Icon.Default()}
+                    // icon={bin.properties.is_high_priority ? highPriorityIcon : new L.Icon.Default()}
+                    // ^ high-priority icon swap commented out alongside fill_level
                   >
                     <Popup>
                       <div className="text-sm">
                         <p className="font-semibold">{bin.properties.address}</p>
                         <p>Type: {bin.properties.waste_type}</p>
-                        <p className={getFillColor(bin.properties.fill_level)}>
+                        {/* <p className={getFillColor(bin.properties.fill_level)}>
                           Fill level: {bin.properties.fill_level}%
-                        </p>
-                        {bin.properties.is_high_priority && (
+                        </p> */}
+                        {/* {bin.properties.is_high_priority && (
                           <p className="text-red-600 font-bold">⚠️ High Priority</p>
-                        )}
+                        )} */}
                       </div>
                     </Popup>
                   </Marker>
@@ -134,12 +140,12 @@ const fetchBins = async (lat: number, lng: number) => {
                     <p className="font-medium text-gray-800">{bin.properties.address}</p>
                     <p className="text-sm text-gray-500 capitalize">{bin.properties.waste_type} waste</p>
                   </div>
-                  <div className="text-right">
+                  {/* <div className="text-right">
                     <p className={`font-bold text-lg ${getFillColor(bin.properties.fill_level)}`}>
                       {bin.properties.fill_level}%
                     </p>
                     <p className="text-xs text-gray-400">fill level</p>
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </div>
@@ -147,6 +153,6 @@ const fetchBins = async (lat: number, lng: number) => {
         )}
       </div>
     </div>
-    
+
   )
 }

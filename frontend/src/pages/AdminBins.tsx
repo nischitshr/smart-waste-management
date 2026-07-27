@@ -27,7 +27,7 @@ interface Bin {
   properties: {
     address: string
     waste_type: string
-    fill_level: number
+    // fill_level: number  // commented out — no hardware sensors yet, future enhancement
     status: string
   }
 }
@@ -49,9 +49,9 @@ export default function AdminBins() {
   const [bins, setBins] = useState<Bin[]>([])
   const [loading, setLoading] = useState(true)
   const [newPin, setNewPin] = useState<{ lat: number; lng: number } | null>(null)
-  const [newForm, setNewForm] = useState({ address: '', waste_type: 'general', status: 'active', fill_level: 0 })
+  const [newForm, setNewForm] = useState({ address: '', waste_type: 'general', status: 'active' })
   const [creating, setCreating] = useState(false)
-  const [edits, setEdits] = useState<Record<number, { address: string; waste_type: string; status: string; fill_level: number }>>({})
+  const [edits, setEdits] = useState<Record<number, { address: string; waste_type: string; status: string }>>({})
   const [savingId, setSavingId] = useState<number | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Bin | null>(null)
 
@@ -93,7 +93,7 @@ export default function AdminBins() {
         properties: newForm,
       })
       setNewPin(null)
-      setNewForm({ address: '', waste_type: 'general', status: 'active', fill_level: 0 })
+      setNewForm({ address: '', waste_type: 'general', status: 'active' })
       await fetchBins()
       showToast('Bin added successfully.', 'success')
     } catch (err) {
@@ -218,7 +218,7 @@ export default function AdminBins() {
             placeholder="Address"
             className="w-full border border-black/10 rounded-xl px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
-          <div className="grid grid-cols-3 gap-3 mb-3">
+          <div className="grid grid-cols-2 gap-3 mb-3">
             <select
               value={newForm.waste_type}
               onChange={(e) => setNewForm({ ...newForm, waste_type: e.target.value })}
@@ -237,15 +237,7 @@ export default function AdminBins() {
                 <option key={s} value={s}>{s}</option>
               ))}
             </select>
-            <input
-              type="number"
-              min={0}
-              max={100}
-              value={newForm.fill_level}
-              onChange={(e) => setNewForm({ ...newForm, fill_level: Number(e.target.value) })}
-              placeholder="Fill %"
-              className="border border-black/10 rounded-xl px-3 py-2 text-sm"
-            />
+            {/* fill_level input removed — no hardware sensors yet, future enhancement */}
           </div>
           <div className="flex gap-2">
             <button
@@ -278,7 +270,7 @@ export default function AdminBins() {
                 onChange={(e) => updateEdit(bin.id, 'address', e.target.value)}
                 className="w-full border border-black/10 rounded-xl px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
-              <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="grid grid-cols-2 gap-2 mb-3">
                 <select
                   value={edit.waste_type}
                   onChange={(e) => updateEdit(bin.id, 'waste_type', e.target.value)}
@@ -297,14 +289,7 @@ export default function AdminBins() {
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
-                <input
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={edit.fill_level}
-                  onChange={(e) => updateEdit(bin.id, 'fill_level', Number(e.target.value))}
-                  className="border border-black/10 rounded-xl px-2 py-1.5 text-xs"
-                />
+                {/* fill_level input removed — no hardware sensors yet, future enhancement */}
               </div>
               <div className="flex gap-2">
                 <button

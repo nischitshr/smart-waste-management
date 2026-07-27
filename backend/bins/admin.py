@@ -5,7 +5,10 @@ from .models import WasteBin
 
 @admin.register(WasteBin)
 class WasteBinAdmin(GISModelAdmin):
-    list_display = ('id', 'address', 'ward', 'waste_type', 'fill_level', 'status', 'is_high_priority')
+    list_display = ('id', 'address', 'ward', 'waste_type', 'status')
+    # fill_level and is_high_priority removed from list_display —
+    # no hardware sensors yet, future enhancement. Field still exists
+    # on the model/DB, just not shown here.
     list_filter = ('status', 'waste_type', 'ward')
     search_fields = ('address',)
     gis_widget_kwargs = {

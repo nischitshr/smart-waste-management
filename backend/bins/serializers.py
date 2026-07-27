@@ -6,5 +6,9 @@ class WasteBinSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = WasteBin
         geo_field = 'location'
-        fields = ['id', 'ward', 'address', 'waste_type', 
-                  'fill_level', 'status', 'last_collected', 'is_high_priority']
+        fields = [
+            'id', 'ward', 'address', 'waste_type',
+            # 'fill_level',       # commented out — no hardware sensors yet, future enhancement
+            'status', 'last_collected',
+            # 'is_high_priority', # depends on fill_level, commented out alongside it
+        ]

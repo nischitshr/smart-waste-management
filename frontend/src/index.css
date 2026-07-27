@@ -31,3 +31,14 @@ body {
 .animate-toast-in {
   animation: toast-in 0.2s ease-out;
 }
+
+/* Cap Leaflet's internal z-index stack so it never overlaps app UI chrome
+   (sidebar drawer, modals, toasts). Leaflet panes normally go up to ~700. */
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 400 !important;
+}
+.leaflet-control {
+  z-index: 400 !important;
+}
