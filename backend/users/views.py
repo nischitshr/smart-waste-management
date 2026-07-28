@@ -26,3 +26,17 @@ class DriverListView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdmin]
     queryset = User.objects.filter(role='driver')
+    
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import UserSerializer, WardSerializer, RegisterSerializer, ChangePasswordSerializer
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'detail': 'Password updated successfully.'})
