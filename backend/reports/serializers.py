@@ -2,6 +2,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import DumpingReport
+from notifications.models import Notification
 
 
 class DumpingReportSerializer(GeoFeatureModelSerializer):
@@ -31,10 +32,19 @@ class AdminReportStatusSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         new_status = validated_data.get('status', instance.status)
+        status_changed = new_status != instance.status
         if new_status == 'resolved' and instance.status != 'resolved':
             instance.resolved_at = timezone.now()
         elif new_status != 'resolved':
             instance.resolved_at = None
         instance.status = new_status
         instance.save()
+
+        if status_changed and instance.reported_by:
+            Notification.objects.create(
+                recipient=instance.reported_by,
+                message=f'Your report "{instance.title}" is now {new_status}.',
+                link=f'/reports/{instance.id}',
+            )
         return instance
+    

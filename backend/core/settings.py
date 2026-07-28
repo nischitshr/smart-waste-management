@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'pickups',
     'routes',
     'analytics',
+    'notifications',
 ]
 
 MIDDLEWARE = [

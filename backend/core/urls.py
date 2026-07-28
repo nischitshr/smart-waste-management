@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/v1/pickups/', include('pickups.urls')),
     path('api/v1/routes/', include('routes.urls')),
     path('api/v1/analytics/', include('analytics.urls')),
+    path('api/v1/notifications/', include('notifications.urls')),
 ]

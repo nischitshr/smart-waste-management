@@ -1,7 +1,7 @@
+from bins.models import WasteBin  # adjust if needed
 from rest_framework import serializers
 from .models import PickupRequest
-from bins.models import WasteBin  # adjust if needed
-
+from notifications.models import Notification
 
 class BinMiniSerializer(serializers.ModelSerializer):
     """Lightweight bin info for displaying inside a pickup request."""
@@ -42,3 +42,16 @@ class AssignDriverSerializer(serializers.ModelSerializer):
         model = PickupRequest
         fields = ['id', 'assigned_driver', 'status']
         read_only_fields = ['id']
+
+    def update(self, instance, validated_data):
+        old_driver_id = instance.assigned_driver_id
+        instance = super().update(instance, validated_data)
+
+        new_driver = instance.assigned_driver
+        if new_driver and new_driver.id != old_driver_id:
+            Notification.objects.create(
+                recipient=new_driver,
+                message=f'You have been assigned a pickup at "{instance.address}".',
+                link=f'/driver/pickups/{instance.id}',
+            )
+        return instance

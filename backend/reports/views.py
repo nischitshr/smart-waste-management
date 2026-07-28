@@ -6,6 +6,8 @@ from users.permissions import IsAdmin
 from .models import DumpingReport
 from .serializers import DumpingReportSerializer, AdminReportStatusSerializer
 
+from users.models import User
+from notifications.models import Notification
 
 class DumpingReportListCreateView(generics.ListCreateAPIView):
     serializer_class = DumpingReportSerializer
@@ -20,8 +22,16 @@ class DumpingReportListCreateView(generics.ListCreateAPIView):
         return DumpingReport.objects.filter(reported_by=user)
 
     def perform_create(self, serializer):
-        serializer.save(reported_by=self.request.user, ward=self.request.user.ward)
-
+        report = serializer.save(reported_by=self.request.user, ward=self.request.user.ward)
+        admins = User.objects.filter(role='admin')
+        Notification.objects.bulk_create([
+            Notification(
+                recipient=admin,
+                message=f'New dumping report submitted: "{report.title}"',
+                link=f'/admin/reports/{report.id}',
+            )
+            for admin in admins
+        ])
 
 class DumpingReportDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = DumpingReportSerializer

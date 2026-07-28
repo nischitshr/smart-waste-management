@@ -20,8 +20,14 @@ export default function Login() {
     try {
       await login(username, password)
       navigate('/dashboard')
-    } catch {
-      setError('Invalid username or password')
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        setError('Invalid username or password.')
+      } else if (err?.response) {
+        setError('Something went wrong. Please try again.')
+      } else {
+        setError('Cannot reach the server. Check your connection and try again.')
+      }
     } finally {
       setLoading(false)
     }

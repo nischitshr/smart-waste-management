@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import ConfirmDialog from "./ConfirmDialog";
+import NotificationBell from "./NotificationBell";
 
 
 const citizenNavItems = [
@@ -123,6 +124,7 @@ export default function Layout() {
                 {user?.role}
               </span>
             </span>
+            <NotificationBell />
             <button
               onClick={() => navigate("/profile")}
               className="text-ink/50 hover:text-primary transition p-2 rounded-lg hover:bg-primary/5"
