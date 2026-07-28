@@ -26,7 +26,14 @@ class DumpingReportListCreateView(generics.ListCreateAPIView):
 class DumpingReportDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = DumpingReportSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = DumpingReport.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'admin':
+            return DumpingReport.objects.all()
+        elif user.role == 'driver':
+            return DumpingReport.objects.filter(ward=user.ward)
+        return DumpingReport.objects.filter(reported_by=user)
 
 
 class AdminReportStatusUpdateView(generics.UpdateAPIView):

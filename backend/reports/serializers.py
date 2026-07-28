@@ -5,12 +5,21 @@ from .models import DumpingReport
 
 
 class DumpingReportSerializer(GeoFeatureModelSerializer):
+    reported_by_username = serializers.SerializerMethodField()
+    ward_name = serializers.SerializerMethodField()
+
     class Meta:
         model = DumpingReport
         geo_field = 'location'
-        fields = ['id', 'reported_by', 'ward', 'title', 'description',
-          'photo', 'status', 'created_at', 'resolved_at']
+        fields = ['id', 'reported_by', 'reported_by_username', 'ward', 'ward_name',
+                  'title', 'description', 'photo', 'status', 'created_at', 'resolved_at']
         read_only_fields = ['reported_by', 'ward', 'status']
+
+    def get_reported_by_username(self, obj):
+        return obj.reported_by.username if obj.reported_by else None
+
+    def get_ward_name(self, obj):
+        return obj.ward.name if obj.ward else None
 
 
 class AdminReportStatusSerializer(serializers.ModelSerializer):

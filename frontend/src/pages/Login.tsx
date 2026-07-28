@@ -28,10 +28,38 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex bg-bg">
+    <div className="relative min-h-screen flex flex-col md:flex-row bg-[#0d2818] md:bg-bg overflow-hidden">
+      {/* Grid texture — mobile only, matches AuthVisual's desktop pattern */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.07] md:hidden" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid-login" width="36" height="36" patternUnits="userSpaceOnUse">
+            <path d="M 36 0 L 0 0 0 36" fill="none" stroke="white" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid-login)" />
+      </svg>
+
+      {/* Mobile-only branding header */}
+      <div className="relative z-10 flex md:hidden flex-col px-6 pt-10 pb-6 text-white">
+        <p className="font-mono text-xs tracking-[0.2em] text-emerald-300/70 uppercase">
+          Ward 15 · Kathmandu
+        </p>
+        <h1
+          className="mt-2 text-2xl font-semibold tracking-tight leading-tight"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+        >
+          Smart Waste Management System
+        </h1>
+        <p className="text-sm text-white/70 mt-2">Ward 15 — cleaner streets, block by block.</p>
+        <p className="mt-3 font-mono text-[11px] text-emerald-300/50 tracking-wide">
+          27.7172° N · 85.3240° E
+        </p>
+      </div>
+
       <AuthVisual />
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 pb-12">
+        <div className="w-full max-w-sm bg-white rounded-2xl px-6 py-8 md:bg-transparent md:rounded-none md:px-0 md:py-0 shadow-xl md:shadow-none">
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-ink tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               ♻️ Welcome back
