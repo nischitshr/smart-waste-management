@@ -44,7 +44,7 @@ class AdminReportStatusSerializer(serializers.ModelSerializer):
             Notification.objects.create(
                 recipient=instance.reported_by,
                 message=f'Your report "{instance.title}" is now {new_status}.',
-                link=f'/reports/{instance.id}',
+                link=f'/reports?highlight={instance.id}',
             )
         return instance
     

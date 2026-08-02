@@ -42,3 +42,16 @@ class WasteBinAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WasteBinSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdmin]
     queryset = WasteBin.objects.all()
+    
+    
+class WasteBinDriverListView(generics.ListAPIView):
+    serializer_class = WasteBinSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role != 'driver':
+            return WasteBin.objects.none()
+        if not user.ward:
+            return WasteBin.objects.none()
+        return WasteBin.objects.filter(ward=user.ward, status='active').order_by('-fill_level')

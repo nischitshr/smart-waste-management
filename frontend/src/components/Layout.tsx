@@ -12,6 +12,7 @@ import {
   User as UserIcon,
   Menu,
   X,
+  LayoutDashboard,
 } from "lucide-react";
 import ConfirmDialog from "./ConfirmDialog";
 import NotificationBell from "./NotificationBell";
@@ -24,7 +25,11 @@ const citizenNavItems = [
   { to: "/routes", label: "Track Vehicles", icon: Truck },
 ];
 
-const driverNavItems = [{ to: "/driver", label: "My Pickups", icon: Truck }];
+const driverNavItems = [
+  { to: "/driver", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/driver/pickups", label: "My Pickups", icon: Truck },
+  { to: "/driver/bins", label: "Ward Bins", icon: MapPin },
+];
 
 const adminNavItems = [
   { to: "/admin", label: "Analytics", icon: BarChart3 },
@@ -91,6 +96,7 @@ export default function Layout() {
             <NavLink
               key={to}
               to={to}
+              end={to === "/driver"}
               onClick={handleNavClick}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition ${

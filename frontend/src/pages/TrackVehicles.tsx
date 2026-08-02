@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Truck } from 'lucide-react'
 import api from '../api/axios'
+import { StyledTileLayer, MapStyleSwitch } from '../components/MapStyleToggle'
+import type { MapStyle } from '../components/MapStyleToggle'
 
-// Fix Leaflet default icon issue with Vite (safe to repeat — idempotent)
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -60,6 +61,7 @@ export default function TrackVehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [positions, setPositions] = useState<GPSFeature[]>([])
   const [loading, setLoading] = useState(true)
+  const [mapStyle, setMapStyle] = useState<MapStyle>('standard')
 
   useEffect(() => {
     fetchData()
@@ -100,12 +102,9 @@ export default function TrackVehicles() {
         </div>
       ) : (
         <>
-          <div className="rounded-2xl overflow-hidden shadow-sm border border-black/5 mb-6" style={{ height: '400px' }}>
+          <div className="relative rounded-2xl overflow-hidden shadow-sm border border-black/5 mb-6" style={{ height: '400px' }}>
             <MapContainer center={WARD_15_CENTER} zoom={15} style={{ height: '100%', width: '100%' }}>
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap contributors"
-              />
+              <StyledTileLayer style={mapStyle} />
               {positions.map((pos) => {
                 const vehicle = vehicles.find((v) => v.id === pos.properties.vehicle)
                 return (
@@ -128,6 +127,7 @@ export default function TrackVehicles() {
                 )
               })}
             </MapContainer>
+            <MapStyleSwitch style={mapStyle} onChange={setMapStyle} />
           </div>
 
           <h3 className="font-semibold text-ink mb-3">

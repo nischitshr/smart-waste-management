@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { AlertTriangle, MapPin, Calendar, User, ImageOff, ChevronRight } from 'lucide-react'
 import L from 'leaflet'
@@ -61,6 +62,9 @@ const statusColor = (status: ReportStatus) => {
 
 export default function AdminReports() {
   const { showToast } = useToast()
+  const { id } = useParams()
+  const navigate = useNavigate()
+
   const [reports, setReports] = useState<ReportFeature[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | ReportStatus>('all')
@@ -73,6 +77,19 @@ export default function AdminReports() {
   useEffect(() => {
     fetchReports()
   }, [])
+
+  // Once reports are loaded, if a :id was in the URL, auto-open that report.
+  useEffect(() => {
+    if (!id || reports.length === 0) return
+    const target = reports.find((r) => r.id === Number(id))
+    if (target) {
+      openReport(target)
+    } else {
+      showToast('That report could not be found.', 'error')
+      navigate('/admin/reports', { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, reports])
 
   const fetchReports = async () => {
     try {
@@ -95,6 +112,8 @@ export default function AdminReports() {
     setSelected(null)
     setPendingStatus(null)
     setConfirmOpen(false)
+    // Reset URL so re-clicking the same notification later re-triggers the effect
+    if (id) navigate('/admin/reports', { replace: true })
   }
 
   const requestSave = () => {

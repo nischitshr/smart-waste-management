@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import L from 'leaflet'
 import { Camera, Send, CheckCircle2 } from 'lucide-react'
@@ -18,6 +19,9 @@ interface Report {
 }
 
 export default function ReportDumping() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const highlightId = searchParams.get('highlight')
+
   const [location, setLocation] = useState<[number, number]>([27.7172, 85.3240])
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -26,6 +30,8 @@ export default function ReportDumping() {
   const [success, setSuccess] = useState(false)
   const [reports, setReports] = useState<Report[]>([])
 
+  const cardRefs = useRef<Record<number, HTMLDivElement | null>>({})
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => setLocation([pos.coords.latitude, pos.coords.longitude]),
@@ -33,6 +39,23 @@ export default function ReportDumping() {
     )
     fetchReports()
   }, [])
+
+  // Once reports are loaded, scroll to and briefly highlight the one
+  // referenced by the notification's ?highlight=<id> query param.
+  useEffect(() => {
+    if (!highlightId || reports.length === 0) return
+    const id = Number(highlightId)
+    const el = cardRefs.current[id]
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    // Clear the query param after a short delay so refreshing the page
+    // later doesn't keep re-triggering the highlight/scroll.
+    const timeout = setTimeout(() => {
+      setSearchParams({}, { replace: true })
+    }, 2500)
+    return () => clearTimeout(timeout)
+  }, [highlightId, reports, setSearchParams])
 
   const fetchReports = async () => {
     try {
@@ -159,23 +182,33 @@ export default function ReportDumping() {
         {reports.length === 0 && (
           <p className="text-sm text-ink/40">No reports submitted yet.</p>
         )}
-        {reports.map((r) => (
-          <div
-            key={r.id}
-            className="bg-surface rounded-xl p-4 border border-black/5 flex justify-between items-start"
-          >
-            <div>
-              <p className="text-sm font-semibold text-ink">{r.properties.title}</p>
-              <p className="text-sm text-ink/70">{r.properties.description}</p>
-              <p className="text-xs text-ink/40 mt-1">
-                {new Date(r.properties.created_at).toLocaleDateString()}
-              </p>
+        {reports.map((r) => {
+          const isHighlighted = highlightId !== null && Number(highlightId) === r.id
+          return (
+            <div
+              key={r.id}
+              ref={(el) => {
+                cardRefs.current[r.id] = el
+              }}
+              className={`bg-surface rounded-xl p-4 border flex justify-between items-start transition-all duration-500 ${
+                isHighlighted
+                  ? 'border-primary ring-2 ring-primary/40 bg-primary/5'
+                  : 'border-black/5'
+              }`}
+            >
+              <div>
+                <p className="text-sm font-semibold text-ink">{r.properties.title}</p>
+                <p className="text-sm text-ink/70">{r.properties.description}</p>
+                <p className="text-xs text-ink/40 mt-1">
+                  {new Date(r.properties.created_at).toLocaleDateString()}
+                </p>
+              </div>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium capitalize ${statusColor(r.properties.status)}`}>
+                {r.properties.status}
+              </span>
             </div>
-            <span className={`text-xs px-2 py-1 rounded-full font-medium capitalize ${statusColor(r.properties.status)}`}>
-              {r.properties.status}
-            </span>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

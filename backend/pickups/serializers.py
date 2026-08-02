@@ -52,6 +52,6 @@ class AssignDriverSerializer(serializers.ModelSerializer):
             Notification.objects.create(
                 recipient=new_driver,
                 message=f'You have been assigned a pickup at "{instance.address}".',
-                link=f'/driver/pickups/{instance.id}',
+                link=f'/driver?highlight={instance.id}',
             )
         return instance

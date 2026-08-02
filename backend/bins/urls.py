@@ -4,6 +4,7 @@ from .views import (
     WasteBinDetailView,
     WasteBinAdminListCreateView,
     WasteBinAdminDetailView,
+    WasteBinDriverListView,
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path('admin/<int:pk>/', WasteBinAdminDetailView.as_view()),
     path('', WasteBinListView.as_view()),
     path('<int:pk>/', WasteBinDetailView.as_view()),
+    path('driver/', WasteBinDriverListView.as_view()),
 ]
