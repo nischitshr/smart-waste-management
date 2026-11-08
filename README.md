@@ -2,7 +2,7 @@
 
 A full-stack web platform for managing urban waste collection. It uses geospatial data to track collection points, service areas and routes, and gives administrators and staff a single dashboard to monitor and manage waste operations.
 
-Live demo: <add-link>
+Live demo: https://swms-frontend.onrender.com/login
 
 ## Features
 
@@ -13,7 +13,6 @@ Live demo: <add-link>
 - Background task support with Redis
 - Dockerized backend, ready for cloud deployment
 
-(Edit this list so it matches exactly what your project does.)
 
 ## Tech Stack
 
@@ -34,7 +33,8 @@ React (Vite)  ->  Django REST API  ->  PostgreSQL + PostGIS
 ```
 
 
-![ERD](docs/erd.png)
+<img width="975" height="532" alt="image" src="https://github.com/user-attachments/assets/0b4b0dbc-ba94-4f86-9185-873c4b636d45" />
+
 
 ## Getting Started
 
@@ -89,7 +89,15 @@ npm run dev
 
 ## Screenshots
 
+<img width="1637" height="753" alt="image" src="https://github.com/user-attachments/assets/0ae3cb94-ab81-44d9-9f3c-3f532558312d" />
 
+<img width="1689" height="775" alt="image" src="https://github.com/user-attachments/assets/bd5644a5-5038-402c-b5c2-55c30a9391cb" />
+
+<img width="975" height="448" alt="image" src="https://github.com/user-attachments/assets/94778931-3b00-410c-a578-09d143662878" />
+
+<img width="975" height="456" alt="image" src="https://github.com/user-attachments/assets/41c45fae-66de-49ee-bb2b-05b42ce02c07" />
+
+<img width="975" height="454" alt="image" src="https://github.com/user-attachments/assets/3771b5dd-0164-44ab-888d-a7d09a3947a0" />
 
 ## Author
 
